@@ -1,10 +1,10 @@
 pipeline {
     agent any
 
-          tools
-    {
-       maven "Maven"
-    }
+    //       tools
+    // {
+    //    maven "Maven"
+    // }
  stages {
     //   stage('checkout') {
     //        steps {
@@ -32,7 +32,7 @@ pipeline {
 
                 sh 'docker build -t webapp:1.0 .'
                 //sh 'docker run --rm -d --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -P samplewebapp:latest'
-                sh 'docker tag webapp:1.0 sunilkv487/webapp:latest'
+                sh 'docker tag webapp sunilkv487/webapp:latest'
                 
                 // sh 'docker tag webapp java/webapp:$BUILD_NUMBER'
 
@@ -62,11 +62,11 @@ pipeline {
          stage('Run Docker container on remote hosts') {
 
             steps {
-		        sh "ssh-add ~/.ssh/id_rsa.pub"
+                sh "eval $(ssh-agent)"
+		        sh "ssh-add"
                 sh "docker -H ssh://ubuntu@54.172.226.69 run -d -p 8003:8080 webapp:1.0"
 
             }
         }
     }
         }
-
