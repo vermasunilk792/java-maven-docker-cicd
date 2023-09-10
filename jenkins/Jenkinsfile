@@ -30,7 +30,7 @@ pipeline {
          stage('Docker Build and Tag') {
            steps {
 
-                sh 'docker build -t webapp:latest .'
+                sh 'docker build -t webapp:1.0 .'
                 //sh 'docker run --rm -d --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -P samplewebapp:latest'
                 sh 'docker tag webapp sunilkv487/webapp:latest'
                 
@@ -43,10 +43,10 @@ pipeline {
 
          stage('Publish image to Docker Hub') {
            steps {
-                //   withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+                   withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
                   sh  'docker push sunilkv487/webapp:latest'
                 //  sh  'docker push sunilkv487/docker-jenkins:latest:$BUILD_NUMBER'
-        //  }
+         }
 
            }
          }
@@ -55,7 +55,7 @@ pipeline {
 
             steps
                         {
-                sh "docker run -d -p 8003:8080 webapp:latest"
+                sh "docker run -d -p 8003:8080 webapp:1.0"
 
             }
         }
@@ -63,7 +63,7 @@ pipeline {
 
             steps {
 		        sh "ssh-add"
-                sh "docker -H ssh://ubuntu@54.172.226.69 run -d -p 8003:8080 webapp:latest"
+                sh "docker -H ssh://ubuntu@54.172.226.69 run -d -p 8003:8080 webapp:1.0"
 
             }
         }
