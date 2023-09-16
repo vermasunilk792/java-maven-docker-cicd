@@ -1,13 +1,20 @@
+def container_name:"webapp"
+def tag="latest"
+def dockerhub_user="sunilkv487"
+def http_port="8090"
+def remote_user="ubuntu"
+def remote_pub_ip=""
+
 pipeline {
     agent any
 
           tools
-    {
-       maven "Maven"
-    }
- stages {
-      stage('checkout') {
-           steps {
+             {
+                maven "Maven"
+            }
+        stages {
+              stage('checkout') {
+                   steps {
 
                 git branch: 'master', url: 'https://github.com/vermasunilk792/java-maven-docker-cicd.git'
 
@@ -16,7 +23,7 @@ pipeline {
         //  stage('Execute Maven') {
         //    steps {
 
-        //         sh 'mvn package'
+        //         sh "mvn clean install"
         //   }
         // }
         //  stage('Docker user permission') {
@@ -27,12 +34,18 @@ pipeline {
         //   }
         // }
 
+        stage ('Image prune') {
+            steps{
+                sh "docker image prune -f"
+            }
+        }
          stage('Docker Build and Tag') {
            steps {
 
-                sh 'docker build -t webapp:1.0 .'
+                sh "docker build -t $container_name:$tag -t $container_name -no-cache ."
+                echo "image build is commpleted"
                 //sh 'docker run --rm -d --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -P samplewebapp:latest'
-                sh 'docker tag webapp:1.0 sunilkv487/webapp:latest'
+                // sh 'docker tag webapp:1.0 sunilkv487/webapp:latest'
                 
                 // sh 'docker tag webapp java/webapp:$BUILD_NUMBER'
 
@@ -41,32 +54,42 @@ pipeline {
 
 
 
-        //  stage('Publish image to Docker Hub') {
-        //    steps {
-        //            withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-        //           sh  'docker push sunilkv487/webapp:latest'
-        //         //  sh  'docker push sunilkv487/docker-jenkins:latest:$BUILD_NUMBER'
-        //  }
+         stage('Publish image to Docker Hub') {
+           steps {
+                //    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+                  sh  'docker push sunilkv487/webapp:latest'
+                //  sh  'docker push sunilkv487/docker-jenkins:latest:$BUILD_NUMBER'
+                withCredentials ([usernamePassword(credentialsId: 'dockerhub1' , usernameVariable: 'dockeruser' , passwordVariable: 'dockerPassword')]) {
+                    sh "docker login -u $dockeruser -p $ddockerPassword"
+                    sh "docker tag $container_name:$tag $dockeruser/$container_name:$tag"
+                    sh "docker push $dockeruser/$container_name: $tag"
+                    echo "image push completed"
 
-        //    }
-        //  }
+                }
+         }
 
-         stage('Run Docker container on Jenkins Agent') {
+           }
+         }
+
+         stage('Run Docker container on Jenkins server') {
 
             steps
                         {
-                sh "docker run -d -p 8003:8080 webapp:1.0"
+                sh "docker rm $container_name -f"
+                sh "docker pull $dockerhub_user/$container_name"
+                sh "docker run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
+                echo "application started on port: ${http_port} (http)"
 
             }
         }
          stage('Run Docker container on remote hosts') {
 
             steps {
-                sh "eval 'ssh-agent -s' "
+               
 		        sh "ssh-add"
-                sh "docker -H ssh://ubuntu@54.172.226.69 run -d -p 8003:8080 webapp:1.0"
+                sh "docker -H ssh://$remote_user@$remote_pub_ip run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
 
             }
         }
     }
-        }
+        
