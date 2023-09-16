@@ -1,6 +1,6 @@
-def container_name="webapp"
-def tag="latest"
-def dockerhub_user="sunilkv487"
+def container_name = "webapp"
+def tag= "latest"
+def dockerhub_user= "sunilkv487"
 def http_port="8090"
 def remote_user="ubuntu"
 def remote_pub_ip=""
@@ -54,7 +54,7 @@ pipeline {
 
 
 
-         stage('Publish image to Docker Hub') {
+         stage ('Publish image to Docker Hub') {
            steps {
                 //    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
                   sh  'docker push sunilkv487/webapp:latest'
@@ -69,12 +69,11 @@ pipeline {
          }
 
            }
-         }
+         
 
-         stage('Run Docker container on Jenkins server') {
+         stage ('Run Docker container on Jenkins server') {
 
-            steps
-                        {
+            steps {
                 sh "docker rm $container_name -f"
                 sh "docker pull $dockerhub_user/$container_name"
                 sh "docker run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
@@ -92,4 +91,4 @@ pipeline {
             }
         }
     }
-        
+}       
