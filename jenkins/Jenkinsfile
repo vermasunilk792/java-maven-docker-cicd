@@ -1,4 +1,4 @@
-def container_name:"webapp"
+def container_name="webapp"
 def tag="latest"
 def dockerhub_user="sunilkv487"
 def http_port="8090"
