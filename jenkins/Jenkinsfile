@@ -4,7 +4,7 @@ def dockerhub_user= "sunilkv487"
 def http_port="8090"
 def remote_user="ubuntu"
 def remote_pub_ip="3.82.4.116"
-def dockerPassword="dckr_pat_zk3IW42V1nA7mINgE4kMsM_eMeA"
+// def dockerPassword="dckr_pat_zk3IW42V1nA7mINgE4kMsM_eMeA"
 
 pipeline {
     agent any
