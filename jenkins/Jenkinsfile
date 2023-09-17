@@ -79,9 +79,9 @@ pipeline {
                 sh "docker pull $dockerhub_user/$container_name"
                 sh "docker run -d  -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
                 // sh "docker run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
-                '''
-                --rm will remove container after creating it
-                '''
+                // '''
+                // --rm will remove container after creating it
+                // '''
                 sh "docker ps -a"
                 sh "curl http://54.237.64.64:${http_port}"
                 echo "application started on port: ${http_port} (http)"
