@@ -63,7 +63,7 @@ pipeline {
                 withCredentials ([usernamePassword(credentialsId: 'dockerhub1' , usernameVariable: 'dockeruser' , passwordVariable: 'dockerPassword')]) {
                     sh "docker login -u $dockeruser -p $dockerPassword"
                     sh "docker tag $container_name:$tag $dockeruser/$container_name:$tag"
-                    sh "docker push $dockeruser/$container_name: $tag"
+                    sh "docker push $dockeruser/$container_name:$tag"
                     echo "image push completed"
 
                 }
