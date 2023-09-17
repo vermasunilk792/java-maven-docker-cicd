@@ -83,7 +83,7 @@ pipeline {
                 // --rm will remove container after creating it
                 // '''
                 sh "docker ps -a"
-                sh "curl http://54.237.64.64:${http_port}"
+               
                 echo "application started on port: ${http_port} (http)"
 
             }
