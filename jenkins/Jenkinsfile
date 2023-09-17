@@ -58,7 +58,7 @@ pipeline {
          stage ('Publish image to Docker Hub') {
            steps {
                 //    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-                  sh  'docker push sunilkv487/webapp:latest'
+                  // sh  'docker push sunilkv487/webapp:latest'
                 //  sh  'docker push sunilkv487/docker-jenkins:latest:$BUILD_NUMBER'
                 withCredentials ([usernamePassword(credentialsId: 'dockerhub1' , usernameVariable: 'dockeruser' , passwordVariable: 'dockerPassword')]) {
                     sh "docker login -u $dockeruser -p $ddockerPassword"
