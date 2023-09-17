@@ -21,12 +21,12 @@ pipeline {
 
           }
         }
-        //  stage('Execute Maven') {
-        //    steps {
+         stage('Execute Maven') {
+           steps {
 
-        //         sh "mvn clean install"
-        //   }
-        // }
+                sh "mvn clean install"
+          }
+        }
         //  stage('Docker user permission') {
         //    steps {
 
