@@ -1,7 +1,7 @@
 def container_name = "webapp"
 def tag= "latest"
 def dockerhub_user= "sunilkv487"
-def http_port="91"
+def http_port="8081"
 def remote_user="ubuntu"
 def remote_pub_ip="3.82.4.116"
 
@@ -78,7 +78,7 @@ pipeline {
                 sh "docker rm $container_name -f"
                 sh "docker pull $dockerhub_user/$container_name"
                 sh "docker run -d  -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
-                // sh "docker run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
+                // sh "docker run -d --rm -p $http_port:80 --name $container_name $dockerhub_user/$container_name:$tag"
                 // '''
                 // --rm will remove container after creating it
                 // '''
