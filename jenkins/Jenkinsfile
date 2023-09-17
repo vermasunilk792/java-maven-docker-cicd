@@ -82,14 +82,14 @@ pipeline {
 
             }
         }
-         stage('Run Docker container on remote hosts') {
+        //  stage('Run Docker container on remote hosts') {
 
-            steps {
+        //     steps {
                
-		        sh "ssh-add"
-                sh "docker -H ssh://$remote_user@$remote_pub_ip run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
+		    //     sh "ssh-add"
+        //         sh "docker -H ssh://$remote_user@$remote_pub_ip run -d --rm -p $http_port:$http_port --name $container_name $dockerhub_user/$container_name:$tag"
 
-            }
-        }
+        //     }
+        // }
     }
 }       
